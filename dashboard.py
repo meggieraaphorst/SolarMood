@@ -15,7 +15,12 @@ st.metric("Total articles", len(df))
 st.subheader("News Sentiment")
 
 sentiment_counts = df["sentiment"].value_counts()
-st.bar_chart(sentiment_counts)
+
+st.bar_chart(
+    sentiment_counts,
+    y_label="Number of articles",
+    x_label="Sentiment"
+)
 
 # Show collected articles
 st.subheader("Collected News Articles")
