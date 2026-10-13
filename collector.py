@@ -46,14 +46,35 @@ sentiment_model = pipeline(
     device=-1
 )
 
-# Test the model with the first 5 articles
-for article in list(articles.values())[:5]:
-    prediction = sentiment_model(
-        article["title"],
-        truncation=True
-    )[0]
+# Load previously saved articles
+df = pd.read_csv("solarmood.csv")
 
-    print("Article:", article["title"])
-    print("Sentiment:", prediction["label"])
-    print("Confidence:", round(prediction["score"], 2))
-    print()
+# Analyze only articles we haven't saved yet
+new_articles = []
+
+for article in articles.values():
+    if article["title"] not in df["title"].values:
+
+        prediction = sentiment_model(
+            article["title"],
+            truncation=True
+        )[0]
+
+        new_articles.append({
+            "title": article["title"],
+            "date": article["date"],
+            "sentiment": prediction["label"],
+            "confidence": round(prediction["score"], 2),
+            "collected_at": datetime.now(timezone.utc).isoformat()
+        })
+
+# Add new articles to our existing data
+df = pd.concat(
+    [df, pd.DataFrame(new_articles)],
+    ignore_index=True
+)
+
+df.to_csv("solarmood.csv", index=False)
+
+print("New articles:", len(new_articles))
+print("Total saved articles:", len(df))
