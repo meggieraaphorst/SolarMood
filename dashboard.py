@@ -22,6 +22,24 @@ st.bar_chart(
     x_label="Sentiment"
 )
 
+
+# Show sentiment over time
+st.subheader("Sentiment Over Time")
+
+# Convert publication dates into dates
+df["day"] = pd.to_datetime(df["date"], utc=True).dt.date
+
+# Count articles per day and sentiment
+daily_sentiment = (
+    df.groupby(["day", "sentiment"])
+    .size()
+    .unstack(fill_value=0)
+)
+
+# Display the results as a line chart
+st.line_chart(daily_sentiment)
+
+
 # Show collected articles
 st.subheader("Collected News Articles")
 st.dataframe(df)
