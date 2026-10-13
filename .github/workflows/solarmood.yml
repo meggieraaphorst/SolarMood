@@ -1,7 +1,11 @@
+
 name: SolarMood Collector
 
 on:
   workflow_dispatch:
+
+permissions:
+  contents: write
 
 jobs:
   collect:
@@ -21,3 +25,13 @@ jobs:
 
       - name: Run SolarMood
         run: python collector.py
+
+      - name: Save new articles to GitHub
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add solarmood.csv
+          if ! git diff --cached --quiet; then
+            git commit -m "Update SolarMood news data"
+            git push
+          fi
