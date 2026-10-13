@@ -1,11 +1,10 @@
 
 name: SolarMood Collector
 
-on:
+'on':
   workflow_dispatch:
   schedule:
-    schedule:
-  - cron: '17,47 * * * *'
+    - cron: '17,47 * * * *'
 
 permissions:
   contents: write
