@@ -4,7 +4,8 @@ name: SolarMood Collector
 on:
   workflow_dispatch:
   schedule:
-    - cron: '0,30 * * * *'
+    schedule:
+  - cron: '17,47 * * * *'
 
 permissions:
   contents: write
