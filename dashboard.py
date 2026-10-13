@@ -41,7 +41,36 @@ hourly_sentiment = (
 st.line_chart(hourly_sentiment)
 
 
-
 # Show collected articles
 st.subheader("Collected News Articles")
-st.dataframe(df)
+
+# Choose a sentiment
+selected_sentiment = st.selectbox(
+    "Filter by sentiment",
+    ["All", "positive", "neutral", "negative"]
+)
+
+# Choose an hour
+available_hours = sorted(df["hour"].dropna().unique())
+selected_hour = st.selectbox(
+    "Filter by hour",
+    ["All"] + [str(hour) for hour in available_hours]
+)
+
+# Apply the selected filters
+filtered_df = df.copy()
+
+if selected_sentiment != "All":
+    filtered_df = filtered_df[
+        filtered_df["sentiment"] == selected_sentiment
+    ]
+
+if selected_hour != "All":
+    filtered_df = filtered_df[
+        filtered_df["hour"].astype(str) == selected_hour
+    ]
+
+# Show matching articles
+st.write("Matching articles:", len(filtered_df))
+st.dataframe(filtered_df)
+
