@@ -36,3 +36,24 @@ for term in search_terms:
         }
 
 print("Found", len(articles), "unique articles")
+
+from transformers import pipeline
+
+# Load our pretrained AI model
+sentiment_model = pipeline(
+    "sentiment-analysis",
+    model="cardiffnlp/twitter-roberta-base-sentiment-latest",
+    device=-1
+)
+
+# Test the model with the first 5 articles
+for article in list(articles.values())[:5]:
+    prediction = sentiment_model(
+        article["title"],
+        truncation=True
+    )[0]
+
+    print("Article:", article["title"])
+    print("Sentiment:", prediction["label"])
+    print("Confidence:", round(prediction["score"], 2))
+    print()
