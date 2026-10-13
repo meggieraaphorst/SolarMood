@@ -23,21 +23,23 @@ st.bar_chart(
 )
 
 
+
 # Show sentiment over time
 st.subheader("Sentiment Over Time")
 
-# Convert publication dates into dates
-df["day"] = pd.to_datetime(df["date"], utc=True).dt.date
+# Convert publication dates to hours
+df["hour"] = pd.to_datetime(df["date"], utc=True).dt.floor("h")
 
-# Count articles per day and sentiment
-daily_sentiment = (
-    df.groupby(["day", "sentiment"])
+# Count articles per hour and sentiment
+hourly_sentiment = (
+    df.groupby(["hour", "sentiment"])
     .size()
     .unstack(fill_value=0)
 )
 
-# Display the results as a line chart
-st.line_chart(daily_sentiment)
+# Display the hourly results
+st.line_chart(hourly_sentiment)
+
 
 
 # Show collected articles
